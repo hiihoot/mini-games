@@ -4,15 +4,21 @@ Card = {}
 Card.__index = Card
 
 
-function Card.new(x, y)
+function Card.new(x, y, row, col)
 	local self = setmetatable({}, Card)
 	self.x = x or 0
     self.y = y or 0
     self.sx = 1
     self.w = 100
-    self.h = 140
+    self.h = 144
+    self.col = col or 1
+    self.row = row or 1
     self.flipped = false
     self.state = nil
+    self.cards = love.graphics.newImage("assets/cards.png")
+    self.quad = love.graphics.newQuad((self.row - 1) * self.w, (self.col - 1) * self.h, 
+    	self.w, self.h, 
+    	self.cards:getDimensions())
     return self
 end
 
@@ -25,12 +31,12 @@ function Card:flip()
 	if self.state == "flipping" then return end
 
 	self.state = "flipping"
-	flux.to(self, 1, {sx = 0})
+	flux.to(self, 0.6, {sx = 0})
 		:ease("quadout")
 		:oncomplete(function()
 				self.fliped = not self.fliped
 			end)
-		:after(self, 1, {sx = -1})
+		:after(self, 0.6, {sx = 1})
 		:ease("quadin")	
 		:oncomplete(function()
 			self.state = nil
@@ -47,12 +53,15 @@ function Card:draw()
 	love.graphics.scale(self.sx, 1)
 
 	if self.fliped then
-		love.graphics.setColor(1, 0, 0)
+		self.quad = love.graphics.newQuad((self.row - 1) * self.w, 
+			(self.col - 1) * self.h, 
+			self.w, self.h, 
+			self.cards:getDimensions())
 	else
-		love.graphics.setColor(0, 0, 1)
+		self.quad = love.graphics.newQuad((15-1) * self.w, (3-1) * self.h, self.w, self.h, self.cards:getDimensions())
 	end
 
-	love.graphics.rectangle("fill", -self.w/2, -self.h/2, self.w, self.h, 20, 20)
+	love.graphics.draw(self.cards, self.quad, -self.w/2, -self.h/2)
 	love.graphics.setColor(1, 1, 1)
 	love.graphics.pop()
 end
