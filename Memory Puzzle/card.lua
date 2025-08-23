@@ -4,11 +4,11 @@ Card = {}
 Card.__index = Card
 
 
-function Card.new(x, y, row, col)
+function Card:new(x, y, row, col)
 	local self = setmetatable({}, Card)
 	self.x = x or 0
     self.y = y or 0
-    self.sx = 1
+    self.sx = -1
     self.w = 100
     self.h = 144
     self.col = col or 1
