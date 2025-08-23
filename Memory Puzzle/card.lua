@@ -15,6 +15,7 @@ function Card:new(x, y, row, col)
     self.row = row or 1
     self.flipped = false
     self.state = nil
+    self.tap = love.audio.newSource("assets/tap.mp3", "static")
     self.cards = love.graphics.newImage("assets/cards.png")
     self.quad = love.graphics.newQuad((self.row - 1) * self.w, (self.col - 1) * self.h, 
     	self.w, self.h, 
@@ -34,6 +35,9 @@ function Card:flip()
 	flux.to(self, 0.6, {sx = 0})
 		:ease("quadout")
 		:oncomplete(function()
+				self.tap:setPitch(love.math.random() * 0.2 + 0.7)
+				self.tap:setVolume(love.math.random() * 0.2 + 0.4)
+				self.tap:play()
 				self.fliped = not self.fliped
 			end)
 		:after(self, 0.6, {sx = 1})

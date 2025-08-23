@@ -7,17 +7,18 @@ local startY = 60
 
 local cards = {}
 
-function newCard(n)
+function newCard(n, y)
 	for i = 1, n do
 		local x = startX + (i-1) * (100 + spacing)
-		local y = startY
 		local c = card:new(x, y, i, 1)
 		table.insert(cards, c)
 	end
 end
 
 function love.load()
-	newCard(4)
+	for i = 1, 3 do
+		newCard(4, startY + (i-1) * (144 + spacing))
+	end
 end
 
 function love.update(dt)
